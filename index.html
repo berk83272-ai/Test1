@@ -1,1 +1,214 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalpli Geri Sayım</title>
 
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  height:100vh;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial, Helvetica, sans-serif;
+  overflow:hidden;
+  color:#fff;
+}
+
+/* Arka plan glow */
+.container{
+  position:relative;
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle,#2a001f 0%,#000 70%);
+}
+
+/* Kalp yağmuru */
+.heart{
+  position:absolute;
+  top:-20px;
+  color:#ff8bd8;
+  font-size:18px;
+  animation:fall linear infinite;
+  opacity:.8;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+    opacity:0;
+  }
+}
+
+/* Büyük kalp alanı */
+.heart-box{
+  position:relative;
+  width:320px;
+  height:300px;
+}
+
+/* SVG kalp */
+svg.heart-shape{
+  width:100%;
+  height:100%;
+  filter:drop-shadow(0 0 35px #ff4da6);
+  animation:pulse 2.5s infinite;
+}
+
+@keyframes pulse{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+}
+
+/* Kalp içi yazı */
+.heart-text{
+  position:absolute;
+  top:48%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:26px;
+  font-weight:bold;
+  color:#ff4da6;
+  text-shadow:0 0 15px #ff4da6;
+}
+
+/* Kedi çizimi */
+.cat{
+  position:absolute;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%);
+  width:90px;
+}
+
+/* Geri sayım */
+.countdown{
+  position:absolute;
+  bottom:35px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:20px;
+  font-weight:bold;
+  color:#ff9edc;
+  text-shadow:0 0 10px #ff4da6;
+}
+
+/* Alt yazı */
+.bottom{
+  margin-top:30px;
+  font-size:48px;
+  font-weight:900;
+  color:#ff9edc;
+  text-shadow:0 0 30px #ff4da6;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- Kalp -->
+  <div class="heart-box">
+
+    <!-- GEOMETRİK SVG KALP -->
+    <svg class="heart-shape" viewBox="0 0 512 512">
+      <path d="M256 472s-216-136-216-264c0-88 72-160 160-160
+               48 0 88 24 112 60
+               24-36 64-60 112-60
+               88 0 160 72 160 160
+               0 128-216 264-216 264z"
+            fill="#ffd1e6"
+            stroke="#ffffff"
+            stroke-width="8"/>
+    </svg>
+
+    <!-- KEDİ -->
+    <svg class="cat" viewBox="0 0 100 100">
+      <circle cx="50" cy="55" r="20" fill="#fff"/>
+      <polygon points="30,40 40,20 50,40" fill="#fff"/>
+      <polygon points="70,40 60,20 50,40" fill="#fff"/>
+
+      <circle cx="43" cy="55" r="2"/>
+      <circle cx="57" cy="55" r="2"/>
+      <path d="M45 63 Q50 68 55 63" stroke="#000" fill="none" stroke-width="2"/>
+
+      <line x1="30" y1="60" x2="42" y2="58" stroke="#000"/>
+      <line x1="30" y1="65" x2="42" y2="63" stroke="#000"/>
+      <line x1="70" y1="60" x2="58" y2="58" stroke="#000"/>
+      <line x1="70" y1="65" x2="58" y2="63" stroke="#000"/>
+    </svg>
+
+    <!-- Yazı -->
+    <div class="heart-text">bekliycen</div>
+
+    <!-- Geri sayım -->
+    <div class="countdown" id="countdown"></div>
+
+  </div>
+
+  <!-- Alt yazı -->
+  <div class="bottom">pundik yermisin?</div>
+
+</div>
+
+<script>
+/* Kalp yağmuru */
+function rain(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(Math.random()*4+5)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),9000);
+}
+setInterval(rain,120);
+
+/* 2 ARALIK GERİ SAYIM */
+function getTargetDate(){
+  const now=new Date();
+  let target=new Date(now.getFullYear(),11,2,0,0,0);
+
+  if(now>target){
+    target.setFullYear(now.getFullYear()+1);
+  }
+  return target;
+}
+
+function update(){
+  const now=new Date();
+  const diff=getTargetDate()-now;
+
+  if(diff<=0){
+    document.getElementById("countdown").innerHTML="bugün 💗";
+    return;
+  }
+
+  const d=Math.floor(diff/(1000*60*60*24));
+  const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+  const m=Math.floor((diff%(1000*60*60))/(1000*60));
+  const s=Math.floor((diff%(1000*60))/1000);
+
+  document.getElementById("countdown").innerHTML=
+    `${d}g ${h}s ${m}dk ${s}sn`;
+}
+
+setInterval(update,1000);
+update();
+</script>
+
+</body>
+  </html>
