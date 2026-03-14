@@ -1,203 +1,225 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>pundikpundik</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUNDİKK</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;800&display=swap');
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
 
-body{
-  height:100vh;
-  background:#000;
-  overflow:hidden;
-  font-family:Arial, Helvetica, sans-serif;
-  color:#fff;
-}
+        #canvas-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            background: radial-gradient(circle at center, #1a0510 0%, #000 100%);
+        }
 
-/* Arka plan */
-.container{
-  position:relative;
-  width:100%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background:radial-gradient(circle,#2a001f 0%,#000 70%);
-}
+        .ui-layer {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
 
-/* Yazılar */
-.top-text{
-  position:absolute;
-  top:40px;
-  font-size:28px;
-  font-weight:bold;
-  color:#ff9edc;
-  text-shadow:0 0 20px #ff4da6;
-}
+        #counter-num {
+            font-size: 5.5rem;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(45deg, #fff, #ff4d6d, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
 
-.bottom-text{
-  position:absolute;
-  bottom:40px;
-  font-size:42px;
-  font-weight:900;
-  color:#ff9edc;
-  text-shadow:0 0 30px #ff4da6;
-}
+        @keyframes shine { to { background-position: 200% center; } }
 
-/* Kalp yağmuru */
-.heart{
-  position:absolute;
-  top:-20px;
-  color:#ff8bd8;
-  font-size:18px;
-  animation:fall linear infinite;
-  opacity:.8;
-}
+        .label {
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+            color: #ff85a1;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
 
-@keyframes fall{
-  to{
-    transform:translateY(110vh) rotate(360deg);
-    opacity:0;
-  }
-}
+        .label-en {
+            font-size: 0.55rem;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
 
-/* OYUN ALANI */
-.game{
-  position:relative;
-  width:90%;
-  max-width:700px;
-  height:220px;
-  border-bottom:4px solid #ff4da6;
-  overflow:hidden;
-}
+        #final-msg {
+            display: none;
+            padding: 20px;
+            animation: hyperIn 1.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
 
-/* Karakter */
-.player{
-  position:absolute;
-  bottom:0;
-  left:80px;
-  width:40px;
-  height:40px;
-  background:#ff9edc;
-  box-shadow:0 0 15px #ff4da6;
-}
+        .quote {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #ffafbd;
+            margin: 0;
+        }
 
-/* Engel */
-.obstacle{
-  position:absolute;
-  bottom:0;
-  right:-40px;
-  width:40px;
-  height:40px;
-  background:#fff;
-  box-shadow:0 0 10px #ff4da6;
-}
-</style>
+        .quote-en {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .birthday {
+            font-size: 4.5rem;
+            font-family: 'Dancing Script', cursive;
+            color: #fff;
+            text-shadow: 0 0 20px #ff0054, 0 0 50px #ff0054;
+        }
+
+        @keyframes hyperIn {
+            0% { opacity: 0; transform: scale(0.5) rotate(-5deg); filter: blur(20px); }
+            100% { opacity: 1; transform: scale(1) rotate(0); filter: blur(0); }
+        }
+    </style>
 </head>
-
 <body>
-<div class="container">
 
-  <div class="top-text">bekliycen</div>
+    <div id="canvas-container"></div>
 
-  <!-- OYUN -->
-  <div class="game" id="game">
-    <div class="player" id="player"></div>
-  </div>
+    <div class="ui-layer">
+        <div id="counter-wrap">
+            <h1 id="counter-num">0</h1>
+            <p class="label">Haftadır Dünyayı</p>
+            <p class="label-en">Weeks Enlightening The World</p>
+        </div>
 
-  <div class="bottom-text">pundik yermisin?</div>
+        <div id="final-msg">
+            <p class="quote">dünyayı</p>
+            <p class="quote-en">the world</p>
+            
+            <p id="time-summary" style="font-size: 1.6rem; font-weight: bold; margin: 10px 0; color: #ff85a1;"></p>
+            
+            <p class="quote">yalayip yutmussunuz</p>
+            
+            <div class="birthday">
+                İyi ki Doğdun Ecoş 
+                <div style="font-size: 1rem; font-family: 'Poppins'; font-weight: 300; opacity: 0.5;">Happy Birthday!</div>
+            </div>
+        </div>
+    </div>
 
-</div>
+    <script>
+        // --- 3D HYPER ENGINE ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-<script>
-/* KALP YAĞMURU */
-function rain(){
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerHTML="💗";
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=(Math.random()*4+5)+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),9000);
-}
-setInterval(rain,120);
+        // Geometri: Gelişmiş Kalp Formu
+        const heartPoints = [];
+        for (let t = 0; t <= Math.PI * 2; t += 0.01) {
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            heartPoints.append? // dummy
+            heartPoints.push(new THREE.Vector3(x * 0.25, y * 0.25, 0));
+        }
 
-/* OYUN MEKANİK */
-const player=document.getElementById("player");
-const game=document.getElementById("game");
+        // Ana Kalp Çizgisi
+        const heartGeo = new THREE.BufferGeometry().setFromPoints(heartPoints);
+        const heartMat = new THREE.LineBasicMaterial({ color: 0xff0054, transparent: true, opacity: 0.3 });
+        const heartLine = new THREE.Line(heartGeo, heartMat);
+        scene.add(heartLine);
 
-let jumping=false;
-let velocity=0;
-let gravity=0.8;
-let position=0;
+        // Kinetic Orbit Particles
+        const pCount = 3500;
+        const pGeo = new THREE.BufferGeometry();
+        const pMat = new THREE.PointsMaterial({ 
+            size: 0.05, 
+            color: 0xffffff, 
+            transparent: true, 
+            blending: THREE.AdditiveBlending,
+            opacity: 0.8
+        });
+        const pSystem = new THREE.Points(pGeo, pMat);
+        scene.add(pSystem);
 
-/* Zıplama */
-function jump(){
-  if(jumping) return;
-  jumping=true;
-  velocity=14;
-}
+        camera.position.z = 12;
 
-document.addEventListener("click",jump);
-document.addEventListener("touchstart",jump);
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
 
-/* Engel üret */
-function createObstacle(){
-  const obs=document.createElement("div");
-  obs.className="obstacle";
-  game.appendChild(obs);
+            const positions = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount; i++) {
+                const ratio = (i / pCount);
+                const angle = ratio * Math.PI * 2 + time * 0.5;
+                
+                // Kalp yörüngesinde akış
+                const tx = 16 * Math.pow(Math.sin(angle), 3) * 0.26;
+                const ty = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * 0.26;
+                const tz = Math.sin(angle * 4 + time) * 1.5;
 
-  let x=game.offsetWidth;
+                positions[i*3] = tx;
+                positions[i*3+1] = ty;
+                positions[i*3+2] = tz;
+            }
+            pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            heartLine.rotation.y = Math.sin(time * 0.5) * 0.2;
+            camera.position.x = Math.sin(time * 0.3) * 1;
+            camera.lookAt(0,0,0);
 
-  function move(){
-    x-=6;
-    obs.style.left=x+"px";
+            renderer.render(scene, camera);
+        }
+        animate();
 
-    /* Çarpışma */
-    const pRect=player.getBoundingClientRect();
-    const oRect=obs.getBoundingClientRect();
+        // --- SAYAÇ SİSTEMİ (ECRİN ÖZEL) ---
+        const bday = new Date(2013, 0, 8); // 8 Ocak 2013
+        const now = new Date();
+        const diff = now - bday;
+        const weeks = Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24)) % 7;
+        const hours = Math.floor(diff / (1000 * 60 * 60)) % 24;
 
-    if(
-      pRect.right>oRect.left &&
-      pRect.left<oRect.right &&
-      pRect.bottom>oRect.top
-    ){
-      alert("Çarptın 😿 Ama oyun sonsuz devam");
-    }
+        let cur = 0;
+        const step = Math.ceil(weeks / 70);
+        const timer = setInterval(() => {
+            cur += step;
+            if(cur >= weeks) {
+                cur = weeks;
+                clearInterval(timer);
+                setTimeout(() => {
+                    document.getElementById('counter-wrap').style.display = 'none';
+                    document.getElementById('time-summary').innerHTML = 
+                        `${weeks} Hafta ${days} Gün ${hours} Saat<br>` +
+                        `<span style="font-size:0.9rem; font-weight:300; opacity:0.6;">${weeks} Weeks ${days} Days ${hours} Hours</span>`;
+                    document.getElementById('final-msg').style.display = 'block';
+                }, 800);
+            }
+            document.getElementById('counter-num').innerText = cur;
+        }, 30);
 
-    if(x<-40){
-      obs.remove();
-    }else{
-      requestAnimationFrame(move);
-    }
-  }
-  move();
-}
-
-setInterval(createObstacle,1800);
-
-/* Fizik */
-function update(){
-  velocity-=gravity;
-  position+=velocity;
-
-  if(position<=0){
-    position=0;
-    jumping=false;
-  }
-
-  player.style.bottom=position+"px";
-  requestAnimationFrame(update);
-}
-update();
-</script>
-
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 </html>
