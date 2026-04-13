@@ -1,358 +1,233 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WiFi Şifre Tahmin Aracı</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            color: white;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            width: 100%;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px 25px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        input, select {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 1rem;
-            backdrop-filter: blur(10px);
-        }
-        input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-        input:focus, select:focus {
-            outline: none;
-            background: rgba(255,255,255,0.3);
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
-        }
-        .btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 20px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        .btn:active {
-            transform: translateY(0);
-        }
-        .results {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-        .password-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 15px;
-        }
-        .password-item {
-            background: rgba(255,255,255,0.1);
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            font-family: monospace;
-            word-break: break-all;
-            font-size: 0.9rem;
-        }
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-        .spinner {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-        .spinner::after {
-            content: '';
-            width: 30px;
-            height: 30px;
-            margin: 0 auto;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .warning {
-            background: rgba(255,107,107,0.3);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px 20px;
-                margin: 10px;
-            }
-            h1 {
-                font-size: 1.3rem;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>7. Sınıf Fen Kampüsü</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #f9faff; --card-bg: #ffffff; --text: #1a1a2e;
+      --primary: #6a5acd; --primary-dark: #483d8b; --accent: #ba55d3;
+      --gray: #6c757d; --border: #d4c4fb;
+    }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.75; margin: 0; padding: 0; }
+    
+    header { 
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); 
+      color: white; padding: 4rem 1rem 5rem; text-align: center; position: relative; overflow: hidden; 
+    }
+    header::before { 
+      content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; 
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%); 
+      animation: rotate 30s linear infinite; 
+    }
+    @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    h1 { font-size: clamp(2.6rem, 8vw, 4.5rem); margin-bottom: 0.8rem; }
+    .subtitle { font-size: 1.35rem; opacity: 0.95; }
+
+    .container { max-width: 1250px; margin: 0 auto; padding: 0 1rem; }
+
+    .unit-section { margin-bottom: 3rem; }
+    .unit-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1.5rem 2rem;
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .unit-header:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .unit-header i { transition: transform 0.4s; }
+    .unit-header.active i { transform: rotate(180deg); }
+
+    .unit-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.7s ease, padding 0.5s ease;
+      background: white;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    .unit-content.open {
+      max-height: 4000px;
+      padding: 2rem;
+    }
+
+    .unit-subtitle { font-size: 1.2rem; color: #444; margin-bottom: 1.5rem; font-style: italic; }
+    .highlight { color: #e63939; font-weight: bold; }
+    img { max-width: 100%; border-radius: 14px; margin: 18px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+
+    footer { text-align: center; padding: 3rem 1rem; color: var(--gray); margin-top: 5rem; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔐 WiFi Şifre Tahmin Aracı</h1>
-        
-        <div class="warning">
-            ⚠️ Bu araç sadece <strong>eğitim amaçlı</strong>dır. Kendi ağlarınızda test edin!
-        </div>
 
-        <div class="input-group">
-            <label>WiFi Adı (SSID):</label>
-            <input type="text" id="ssid" placeholder="Örn: TurkTelekom_ABC123" maxlength="32">
-        </div>
+<header>
+  <h1>7. Sınıf Fen Kampüsü</h1>
+  <p class="subtitle">Mor enerjili fen dünyası – Tüm üniteler detaylı burada! 💜🔬</p>
+</header>
 
-        <div class="input-group">
-            <label>Şifre Uzunluğu:</label>
-            <select id="length">
-                <option value="8">8 karakter</option>
-                <option value="10">10 karakter</option>
-                <option value="12" selected>12 karakter</option>
-                <option value="16">16 karakter (WPA2)</option>
-            </select>
-        </div>
+<div class="container">
 
-        <div class="input-group">
-            <label>Tahmin Türü:</label>
-            <select id="type">
-                <option value="common">Popüler Şifreler</option>
-                <option value="ssid-based">SSID Tabanlı</option>
-                <option value="numeric">Sadece Rakam</option>
-                <option value="pattern">Desen Tabanlı</option>
-                <option value="mixed">Karışık</option>
-            </select>
-        </div>
-
-        <button class="btn" onclick="generatePasswords()">🚀 Şifreleri Tahmin Et</button>
-
-        <div class="spinner" id="spinner"></div>
-
-        <div class="results" id="results">
-            <h3>📋 Olası Şifreler (<span id="count">0</span> adet)</h3>
-            <div class="password-list" id="passwordList"></div>
-            <div class="stats">
-                <span>Başarı Oranı: <span id="successRate">0%</span></span>
-                <span>Süre: <span id="time">0s</span></span>
-            </div>
-            <button class="btn" onclick="copyPasswords()" style="margin-top: 15px; font-size: 1rem;">📋 Hepsini Kopyala</button>
-        </div>
+  <!-- 1. Ünite - Çok Detaylı -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>1. Güneş Sistemi ve Ötesi</span>
+      <i class="fas fa-chevron-down"></i>
     </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Uzay araştırmaları, teleskoplar, uydular ve yıldızların yaşam döngüsü hakkında kapsamlı bilgiler.</p>
+      
+      <p>Güneş Sistemi, <span class="highlight">Güneş</span> etrafında dönen 8 gezegenden oluşur. Bunlar Merkür, Venüs, Dünya, Mars (iç gezegenler - kayaç yapılı) ve Jüpiter, Satürn, Uranüs, Neptün (dış gezegenler - gaz devleri) olarak ikiye ayrılır. Ayrıca birçok uydu, asteroid kuşağı ve kuyruklu yıldız da sistemin parçasıdır.</p>
+      
+      <img src="https://images.unsplash.com/photo-1447433589675-4aaa569f3e05?w=800" alt="Güneş Sistemi">
+      
+      <p>Uzay araştırmalarında teleskoplar çok önemlidir. <span class="highlight">Hubble Uzay Teleskobu</span> uzun yıllar boyunca evrenin derinliklerini görüntüledi. Günümüzde ise <span class="highlight">James Webb Uzay Teleskobu</span> çok daha güçlü sensörleriyle ilk galaksileri ve yıldız oluşumlarını gözlemlemektedir. Türkiye'de TÜBİTAK Uzay Teknolojileri Araştırma Enstitüsü tarafından geliştirilen <span class="highlight">İMECE uydusu</span> yeryüzü gözlemi ve haberleşme için kullanılmaktadır.</p>
+      
+      <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800" alt="James Webb">
+      
+      <p>Yıldızlar <span class="highlight">bulutsu</span> denilen gaz ve toz bulutlarından doğar. Küçük kütleli yıldızlar kırmızı dev olup beyaz cüceye dönüşürken, büyük kütleli yıldızlar <span class="highlight">süpernova</span> patlaması ile sona erer ve nötron yıldızı veya kara delik bırakabilir. Galaksimiz <span class="highlight">Samanyolu</span>, milyarlarca yıldızdan oluşan dev bir yapıdır. Işık yılı, ışığın bir yılda aldığı mesafedir ve evrenin büyüklüğünü anlamamızı sağlar.</p>
+      
+      <p>Uzay kirliliği günümüzde büyük bir sorundur. Atık uydular, roket parçaları ve ışık kirliliği gök gözlemlerini zorlaştırmaktadır. Bu nedenle uluslararası anlaşmalarla uzaydaki atıkların azaltılması hedeflenmektedir.</p>
+    </div>
+  </div>
 
-    <script>
-        const commonPasswords = [
-            '12345678', '1234567890', '00000000', '123123123', '11111111',
-            '123456789', 'password123', 'qwerty123', 'abc123456', 'admin1234',
-            '1234qwer', '12345abc', 'password', '123456', 'adminadmin'
-        ];
+  <!-- 2. Ünite - Detaylı -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>2. Hücre ve Bölünmeler</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Canlıların en küçük yapı taşı olan hücre ve bölünme süreçleri.</p>
+      
+      <p>Hücre, tüm canlıların temel yapı birimidir. <span class="highlight">Hayvan hücresi</span> ile <span class="highlight">bitki hücresi</span> arasında önemli farklar vardır. Bitki hücrelerinde kloroplast (fotosentez için), büyük merkezi koful ve selüloz hücre duvarı bulunurken, hayvan hücrelerinde bunlar yoktur. Her iki hücrede de ortak olarak çekirdek, sitoplazma, hücre zarı, mitokondri ve ribozom bulunur.</p>
+      
+      <img src="https://images.unsplash.com/photo-1532187869886-1d553b3b9631?w=800" alt="Hayvan ve Bitki Hücresi">
+      
+      <p><span class="highlight">Mitoz bölünme</span>, vücut hücrelerinde gerçekleşir ve büyüme, onarım, yaraların iyileşmesi için gereklidir. Mitoz sonunda ana hücre ile aynı sayıda kromozomlu iki yavru hücre oluşur. <span class="highlight">Mayoz bölünme</span> ise üreme hücrelerinde (sperm ve yumurta) gerçekleşir. Mayoz sonucunda kromozom sayısı yarıya iner ve genetik çeşitlilik sağlanır. Bu çeşitlilik canlıların evriminde çok önemlidir.</p>
+      
+      <p>Hücreden doku, dokudan organ, organdan sistem ve sistemlerden organizma oluşur. Bu hiyerarşi canlıların karmaşık yapısını açıklar.</p>
+    </div>
+  </div>
 
-        const patterns = {
-            numeric: '0123456789',
-            alpha: 'abcdefghijklmnopqrstuvwxyz',
-            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            special: '!@#$%^&*'
-        };
+  <!-- 3. Ünite -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>3. Kuvvet ve Enerji</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Kuvvetin etkileri, iş ve enerji dönüşümleri.</p>
+      
+      <p>Kuvvet, cismin hareket durumunu, yönünü veya şeklini değiştiren etkidir. <span class="highlight">Yer çekimi kuvveti</span>, <span class="highlight">sürtünme kuvveti</span>, manyetik kuvvet ve elektrik kuvveti günlük hayatta karşılaştığımız kuvvet türlerindendir.</p>
+      
+      <p><span class="highlight">İş</span>, kuvvetin uygulandığı cismin hareket yönünde yer değiştirmesiyle yapılır. Formülü: İş = Kuvvet × Yer Değiştirme. Birimi joule’dür.</p>
+      
+      <img src="https://images.unsplash.com/photo-1581092160560-1c1e428e9d65?w=800" alt="Enerji Dönüşümü">
+      
+      <p><span class="highlight">Kinetik enerji</span> hareket halindeki cismin enerjisidir. <span class="highlight">Potansiyel enerji</span> ise cismin konumundan veya şekil değiştirmesinden kaynaklanır (çekim potansiyel enerjisi, esneklik potansiyel enerjisi). Enerji bir türden diğerine dönüşür ancak toplam enerji korunur. Sarkaç hareketi, serbest düşme ve eğik düzlem bu dönüşüme güzel örneklerdir.</p>
+    </div>
+  </div>
 
-        function generateCommon(ssid) {
-            const ssidClean = ssid.toLowerCase().replace(/[^a-z0-9]/g, '');
-            const results = [...commonPasswords];
-            
-            // SSID tabanlı varyasyonlar
-            if (ssidClean) {
-                results.push(ssidClean.slice(0,8));
-                results.push(ssidClean + '123');
-                results.push('123' + ssidClean.slice(0,5));
-            }
-            return results.slice(0, 50);
-        }
+  <!-- 4. Ünite -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>4. Saf Madde ve Karışımlar</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Maddenin tanecikli yapısı ve ayrıştırma yöntemleri.</p>
+      
+      <p>Madde <span class="highlight">atomlardan</span> oluşur. Atomun çekirdeğinde proton ve nötron, etrafında elektronlar bulunur. Saf maddeler iki gruba ayrılır: <span class="highlight">Element</span> (tek tür atom) ve <span class="highlight">Bileşik</span> (farklı atomların belirli oranda birleşmesi).</p>
+      
+      <p>Karışımlar ise homojen (tek fazlı, çözelti) ve heterojen (çok fazlı) olarak sınıflandırılır. Çözünme hızını etkileyen faktörler: <span class="highlight">sıcaklık artışı</span>, karıştırma ve yüzey alanının büyümesidir.</p>
+      
+      <img src="https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=800" alt="Atom ve Karışım">
+      
+      <p>Karışımları ayırma yöntemleri: süzme (katı-sıvı), buharlaştırma, damıtma (kaynama noktası farkı), manyetik ayırma ve yoğunluk farkından yararlanma.</p>
+    </div>
+  </div>
 
-        function generateSsidBased(ssid, length) {
-            const ssidClean = ssid.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, length);
-            const results = [];
-            
-            if (ssidClean.length >= length) {
-                results.push(ssidClean.slice(0, length));
-            }
-            
-            // Sayı eklemeleri
-            for (let i = 0; i < 10; i++) {
-                const padded = ssidClean.padEnd(length, i.toString());
-                if (padded.length === length) results.push(padded);
-            }
-            
-            return results.slice(0, 30);
-        }
+  <!-- 5. Ünite -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>5. Işığın Madde ile Etkileşimi</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Işığın yansıması, kırılması ve merceklerin kullanımı.</p>
+      
+      <p>Işık düz bir çizgi boyunca yayılır. Işık bir ortamdan başka bir ortama geçerken <span class="highlight">kırılır</span>. Kırılma olayı, ışığın yoğunluğu farklı ortamlarda farklı hızlarda hareket etmesinden kaynaklanır. Örneğin su içerisindeki kalem kırık görünür.</p>
+      
+      <img src="https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=800" alt="Işık Kırılması">
+      
+      <p>Mercekler ışığı kırarak görüntü oluşturur. <span class="highlight">İnce kenarlı mercek</span> (konveks) yakınlaştırır ve büyüteç, teleskopta kullanılır. <span class="highlight">Kalın kenarlı mercek</span> (konkav) uzaklaştırır ve miyop gözlüklerinde tercih edilir.</p>
+    </div>
+  </div>
 
-        function generateNumeric(length) {
-            const results = [];
-            for (let i = 0; i < 100; i++) {
-                const num = Math.floor(Math.random() * 10**length).toString().padStart(length, '0');
-                results.push(num);
-            }
-            return results;
-        }
+  <!-- 6. Ünite -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>6. Canlılarda Üreme, Büyüme ve Gelişme</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Üreme türleri ve gelişim süreçleri.</p>
+      
+      <p>Canlılar <span class="highlight">eşeysiz üreme</span> (bölünme, tomurcuklanma, vejetatif üreme) ve <span class="highlight">eşeyli üreme</span> (döllenme) yapabilir. Bitkilerde tohumla, hayvanlarda iç veya dış döllenmeyle üreme görülür.</p>
+      
+      <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800" alt="Üreme">
+      
+      <p>Büyüme hücre sayısının artmasıyla, gelişme ise organların olgunlaşması ve fonksiyon kazanmasıyla gerçekleşir. Hormonlar (büyüme hormonu, östrojen, testosteron) bu süreçleri düzenler.</p>
+    </div>
+  </div>
 
-        function generatePattern(length) {
-            const results = [];
-            const patterns = ['12345678', '87654321', '12121212', '11223344', 'abcd1234'];
-            for (let i = 0; i < 50; i++) {
-                const base = patterns[Math.floor(Math.random() * patterns.length)];
-                const padded = (base + '123').slice(0, length);
-                results.push(padded.padEnd(length, '0'));
-            }
-            return results;
-        }
+  <!-- 7. Ünite -->
+  <div class="unit-section">
+    <div class="unit-header" onclick="toggleContent(this)">
+      <span>7. Elektrik Devreleri</span>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="unit-content">
+      <p class="unit-subtitle">Elektrik akımı, devre türleri ve güvenlik önlemleri.</p>
+      
+      <p>Elektrik akımı, elektronların iletken maddelerdeki düzenli hareketidir. Devre elemanları: <span class="highlight">pil</span> (gerilim kaynağı), lamba (tüketici), anahtar ve teller.</p>
+      
+      <img src="https://images.unsplash.com/photo-1581092160560-1c1e428e9d65?w=800" alt="Elektrik Devresi">
+      
+      <p><span class="highlight">Seri devre</span>de akım her noktada aynıdır, gerilim bölünür. <span class="highlight">Paralel devre</span>de gerilim aynıdır, akım dallara ayrılır. <span class="highlight">Ohm Kanunu</span> (V = I × R) elektrik devrelerinin temelidir. Güvenlik için sigorta ve topraklama çok önemlidir.</p>
+    </div>
+  </div>
 
-        function generateMixed(length) {
-            const results = [];
-            const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-            for (let i = 0; i < 50; i++) {
-                let password = '';
-                for (let j = 0; j < length; j++) {
-                    password += chars[Math.floor(Math.random() * chars.length)];
-                }
-                results.push(password);
-            }
-            return results;
-        }
+</div>
 
-        function generatePasswords() {
-            const ssid = document.getElementById('ssid').value.trim();
-            const length = parseInt(document.getElementById('length').value);
-            const type = document.getElementById('type').value;
+<footer>
+  <p>© 2026 7. Sınıf Fen Kampüsü • MEB Müfredatı</p>
+</footer>
 
-            if (!ssid) {
-                alert('Lütfen WiFi adını girin!');
-                return;
-            }
+<script>
+function toggleContent(header) {
+  const content = header.nextElementSibling;
+  const isOpen = content.classList.contains('open');
 
-            document.getElementById('spinner').style.display = 'block';
-            document.querySelector('.btn').disabled = true;
-            document.querySelector('.btn').textContent = '⏳ Hesaplanıyor...';
+  document.querySelectorAll('.unit-content').forEach(c => c.classList.remove('open'));
+  document.querySelectorAll('.unit-header').forEach(h => h.classList.remove('active'));
 
-            setTimeout(() => {
-                let passwords = [];
-                
-                switch(type) {
-                    case 'common': passwords = generateCommon(ssid); break;
-                    case 'ssid-based': passwords = generateSsidBased(ssid, length); break;
-                    case 'numeric': passwords = generateNumeric(length); break;
-                    case 'pattern': passwords = generatePattern(length); break;
-                    case 'mixed': passwords = generateMixed(length); break;
-                }
-
-                displayResults(passwords, passwords.length);
-                
-                document.getElementById('spinner').style.display = 'none';
-                document.querySelector('.btn').disabled = false;
-                document.querySelector('.btn').textContent = '🚀 Şifreleri Tahmin Et';
-            }, 1500);
-        }
-
-        function displayResults(passwords, count) {
-            const list = document.getElementById('passwordList');
-            const results = document.getElementById('results');
-            const countEl = document.getElementById('count');
-            const timeEl = document.getElementById('time');
-            const successRateEl = document.getElementById('successRate');
-
-            list.innerHTML = '';
-            passwords.forEach((pwd, index) => {
-                const item = document.createElement('div');
-                item.className = 'password-item';
-                item.textContent = `${index + 1}. ${pwd}`;
-                list.appendChild(item);
-            });
-
-            countEl.textContent = count;
-            timeEl.textContent = (Math.random() * 3 + 1).toFixed(1) + 's';
-            successRateEl.textContent = (Math.random() * 25 + 5).toFixed(1) + '%';
-
-            results.style.display = 'block';
-            list.scrollTop = 0;
-        }
-
-        function copyPasswords() {
-            const passwords = Array.from(document.querySelectorAll('.password-item'))
-                .map(item => item.textContent.replace(/^\d+\.\s*/, ''))
-                .join('\n');
-            
-            navigator.clipboard.writeText(passwords).then(() => {
-                const btn = event.target;
-                const original = btn.textContent;
-                btn.textContent = '✅ Kopyalandı!';
-                setTimeout(() => btn.textContent = original, 2000);
-            });
-        }
-
-        // Enter tuşu ile tetikleme
-        document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                const btn = document.querySelector('.btn');
-                if (!btn.disabled) generatePasswords();
-            }
-        });
-    </script>
+  if (!isOpen) {
+    content.classList.add('open');
+    header.classList.add('active');
+  }
+}
+</script>
 </body>
-</html>
+             </html>
